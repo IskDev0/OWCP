@@ -9,9 +9,14 @@ async function getCharacters(): Promise<void> {
     const {characters} = storeToRefs(characterStore)
 
     const data = await getDocs(collection(db, "characters"))
+
+    let tempArr: CharacterType[] = []
+
     data.forEach((doc): void => {
-        characters.value.push(doc.data() as CharacterType)
+        tempArr.push(doc.data() as CharacterType)
     })
+
+    characters.value = tempArr
 }
 
 export default getCharacters

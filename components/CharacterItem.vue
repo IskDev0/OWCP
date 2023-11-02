@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <article class="bg-white rounded-lg" v-if="character">
+  <article @click="navigateTo(`/character/${character.name}`)" class="bg-white rounded-lg" v-if="character">
     <img :src="character.img" :alt="character.name">
     <p class="font-bold italic text-xl text-center py-2">{{ character.name }}</p>
   </article>

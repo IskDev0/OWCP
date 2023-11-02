@@ -5,8 +5,12 @@ export const useCharacterStore = defineStore("characters", () => {
 
     const characters = ref<CharacterType[]>([])
 
+    const searchQuery = ref<string>("")
+
+    const currentCharacter = ref<CharacterType>()
+
     return {
-        characters
+        characters, searchQuery, currentCharacter
     }
 
 })
