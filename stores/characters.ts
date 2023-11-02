@@ -9,8 +9,19 @@ export const useCharacterStore = defineStore("characters", () => {
 
     const currentCharacter = ref<CharacterType>()
 
+    const clearStore = ():void => {
+        currentCharacter.value = {
+            role: "",
+            name: "",
+            img: "",
+            dps: [],
+            tanks: [],
+            supports: []
+        }
+    }
+
     return {
-        characters, searchQuery, currentCharacter
+        characters, searchQuery, currentCharacter, clearStore
     }
 
 })

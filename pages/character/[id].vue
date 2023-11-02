@@ -32,15 +32,15 @@ onMounted(async () => {
     </div>
     <div class="w-2/3">
       <div class="grid grid-cols-3 gap-8" v-if="supportsUrl">
-        <div v-for="(tank,index) in currentCharacter.tanks" :key="index" class="flex flex-col items-center bg-white">
+        <div @click="navigateTo(tank)" v-for="(tank,index) in currentCharacter.tanks" :key="index" class="flex flex-col items-center bg-white">
           <img :src="tanksUrl[index]" :alt="tank">
           <h2 class="text-xl font-bold italic">{{ tank }}</h2>
         </div>
-        <div v-for="(dps,index) in currentCharacter.dps" :key="index" class="flex flex-col items-center bg-white">
+        <div @click="navigateTo(dps)" v-for="(dps,index) in currentCharacter.dps" :key="index" class="flex flex-col items-center bg-white">
           <img :src="dpsUrl[index]" :alt="dps">
           <h2 class="text-xl font-bold italic">{{ dps }}</h2>
         </div>
-        <div v-for="(support,index) in currentCharacter.supports" :key="index"
+        <div @click="navigateTo(support)" v-for="(support,index) in currentCharacter.supports" :key="index"
              class="flex flex-col items-center bg-white">
           <img :src="supportsUrl[index]" :alt="support">
           <h2 class="text-xl font-bold italic">{{ support }}</h2>
