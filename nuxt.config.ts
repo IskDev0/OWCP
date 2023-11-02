@@ -4,7 +4,8 @@ export default defineNuxtConfig({
       "nuxt-vuefire",
       "@pinia/nuxt",
       "nuxt-headlessui",
-      "@nuxtjs/tailwindcss"
+      "@nuxtjs/tailwindcss",
+      "nuxt-icon"
   ],
     vuefire: {
         config: {
