@@ -1,8 +1,11 @@
 <script setup lang="ts">
 
 import type CharacterType from "~/utils/types/characterType";
+import {getDownloadURL, ref as storageRef, uploadBytes} from "firebase/storage";
 
 const characterStore = useCharacterStore()
+
+const storage = useFirebaseStorage()
 
 const {characters} = storeToRefs(characterStore)
 
@@ -58,6 +61,26 @@ const filteredSupports = computed(() => {
       )
 })
 
+const file = ref()
+const previewImage = ref()
+
+async function handleUpload(event: Event): Promise<void> {
+  if (event.target instanceof HTMLInputElement) {
+    const inputElement = event.target as HTMLInputElement;
+
+    if (inputElement.files && inputElement.files[0]) {
+      const selectedFile = inputElement.files[0];
+
+      const fileRef = storageRef(storage, `/images/${selectedFile.name}`);
+      await uploadBytes(fileRef, selectedFile);
+
+      const pathReference = storageRef(storage, `images/${selectedFile.name}`);
+      previewImage.value = await getDownloadURL(pathReference);
+    }
+  }
+}
+
+
 onMounted(async () => {
   await getCharacters()
   tanks.value = characters.value.filter((character) => character.role === "tank")
@@ -85,8 +108,8 @@ const updateQuery = (value: string): void => {
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
                class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
-          <img src="/placeholder.png" alt="image">
-          <input id="dropzone-file" type="file" class="hidden"/>
+          <img class="rounded-lg" :src="previewImage ? previewImage : '/placeholder.png'" alt="image">
+          <input @change="handleUpload" id="dropzone-file" type="file" class="hidden"/>
         </label>
         <input class="py-2 px-4 rounded-lg w-full" type="text" placeholder="Name">
       </form>
