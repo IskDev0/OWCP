@@ -2,14 +2,24 @@
 
 import type CharacterType from "~/utils/types/characterType";
 import {getDownloadURL, ref as storageRef, uploadBytes} from "firebase/storage";
+import {addDoc, collection} from "@firebase/firestore";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from '@headlessui/vue'
 
 const characterStore = useCharacterStore()
 
 const storage = useFirebaseStorage()
+const db = useFirestore()
 
 const {characters} = storeToRefs(characterStore)
 
 const query = ref<string>("")
+
+const characterName = ref<string>()
 
 const tanks = ref()
 const dps = ref()
@@ -80,6 +90,19 @@ async function handleUpload(event: Event): Promise<void> {
   }
 }
 
+async function uploadData(){
+  await addDoc(collection(db, "characters"), {
+    name: characterName.value,
+    img: previewImage.value,
+    role: selectedRole.value.toLowerCase(),
+    dps: [selectedDps1.value.name, selectedDps2.value.name, selectedDps3.value.name],
+    tanks: [selectedTank1.value.name, selectedTank2.value.name, selectedTank3.value.name],
+    supports: [selectedSupport1.value.name, selectedSupport2.value.name, selectedSupport3.value.name],
+  })
+}
+
+const roles = ["Tank", "DPS", "Support"]
+const selectedRole = ref<string>(roles[0])
 
 onMounted(async () => {
   await getCharacters()
@@ -111,7 +134,60 @@ const updateQuery = (value: string): void => {
           <img class="rounded-lg" :src="previewImage ? previewImage : '/placeholder.png'" alt="image">
           <input @change="handleUpload" id="dropzone-file" type="file" class="hidden"/>
         </label>
-        <input class="py-2 px-4 rounded-lg w-full" type="text" placeholder="Name">
+        <input v-model="characterName" class="py-2 px-4 rounded-lg w-full" type="text" placeholder="Name">
+        <Listbox v-model="selectedRole">
+          <div class="relative mt-1 w-full">
+            <ListboxButton
+                class="relative w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+            >
+              <span class="block truncate">{{ selectedRole }}</span>
+              <span
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+              >
+            <Icon name="mdi:unfold-more-horizontal"/>
+          </span>
+            </ListboxButton>
+
+            <transition
+                leave-active-class="transition duration-100 ease-in"
+                leave-from-class="opacity-100"
+                leave-to-class="opacity-0"
+            >
+              <ListboxOptions
+                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+              >
+                <ListboxOption
+                    v-slot="{ active, selected }"
+                    v-for="role in roles"
+                    :key="role"
+                    :value="role"
+                    as="template"
+                >
+                  <li
+                      :class="[
+                  active ? 'bg-teal-600 text-white' : 'text-gray-900',
+                  'relative cursor-pointer select-none py-2 pl-10 pr-4',
+                ]"
+                  >
+                <span
+                    :class="[
+                    selected ? 'font-medium' : 'font-normal',
+                    'block truncate',
+                  ]"
+                >{{ role }}</span
+                >
+                    <span
+                        v-if="selected"
+                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-texl-600"
+                    >
+                  <Icon name="mdi:check"/>
+                </span>
+                  </li>
+                </ListboxOption>
+              </ListboxOptions>
+            </transition>
+          </div>
+        </Listbox>
       </form>
     </div>
     <div class="w-2/3 bg-white p-4 rounded-lg">
@@ -171,4 +247,7 @@ const updateQuery = (value: string): void => {
       </div>
     </div>
   </section>
+  <div class="w-1/2 mx-auto">
+  <button @click="uploadData" class="w-full py-2 px-4 rounded-lg bg-teal-600 text-white mt-10 text-center font-bold">Add</button>
+  </div>
 </template>
