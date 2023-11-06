@@ -15,7 +15,7 @@ defineProps({
   filteredArray: {
     type: Array,
   },
-  query: {
+  searchQuery: {
     type: String,
   },
   selected: {
@@ -33,8 +33,9 @@ const emit = defineEmits(['update:modelValue', 'updateQuery'])
       >
         <ComboboxInput
             class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-            :displayValue="(character) => character.name"
+            :displayValue="character => character.name"
             @change="emit('updateQuery', $event.target.value)"
+            :value="selected?.name"
         />
         <ComboboxButton
             class="absolute inset-y-0 right-0 flex items-center pr-2"
@@ -52,7 +53,7 @@ const emit = defineEmits(['update:modelValue', 'updateQuery'])
             class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
         >
           <div
-              v-if="filteredArray!.length === 0 && query !== ''"
+              v-if="filteredArray!.length === 0 && searchQuery !== ''"
               class="relative cursor-default select-none py-2 px-4 text-gray-700"
           >
             Nothing found.
@@ -76,7 +77,7 @@ const emit = defineEmits(['update:modelValue', 'updateQuery'])
                     class="block truncate"
                     :class="{ 'font-medium': selected, 'font-normal': !selected }"
                 >
-                  {{ character.name }}
+                  {{ character.name ? character.name : character }}
                 </span>
               <span
                   v-if="selected"

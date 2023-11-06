@@ -1,8 +1,7 @@
 <script setup lang="ts">
 
 import type CharacterType from "~/utils/types/characterType";
-import {getDownloadURL, ref as storageRef, uploadBytes} from "firebase/storage";
-import {addDoc, collection} from "@firebase/firestore";
+import {collection, doc, getDocs, query, updateDoc, where} from "@firebase/firestore";
 import {
   Listbox,
   ListboxButton,
@@ -12,12 +11,11 @@ import {
 
 const characterStore = useCharacterStore()
 
-const storage = useFirebaseStorage()
 const db = useFirestore()
 
-const {characters} = storeToRefs(characterStore)
+const {characters, currentCharacter} = storeToRefs(characterStore)
 
-const query = ref<string>("")
+const searchQuery = ref<string>("")
 
 const characterName = ref<string>()
 
@@ -39,89 +37,108 @@ const selectedSupport3 = ref()
 
 
 const filteredTanks = computed(() =>
-    query.value === ''
+    searchQuery.value === ''
         ? tanks.value
         : tanks.value.filter((character: CharacterType) =>
             character.name
                 .toLowerCase()
                 .replace(/\s+/g, '')
-                .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+                .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
         )
 )
 
 const filteredDps = computed(() =>
-    query.value === ''
+    searchQuery.value === ''
         ? dps.value
         : dps.value.filter((character: CharacterType) =>
             character.name
                 .toLowerCase()
                 .replace(/\s+/g, '')
-                .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+                .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
         )
 )
 
 const filteredSupports = computed(() => {
-  return query.value === ''
+  return searchQuery.value === ''
       ? supports.value
       : supports.value.filter((character: CharacterType) =>
           character.name
               .toLowerCase()
               .replace(/\s+/g, '')
-              .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+              .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
       )
 })
 
-const file = ref()
 const previewImage = ref()
 
-async function handleUpload(event: Event): Promise<void> {
-  if (event.target instanceof HTMLInputElement) {
-    const inputElement = event.target as HTMLInputElement;
+async function getId() : Promise<string> {
+  const collectionRef = collection(db, "characters")
+  const q = query(collectionRef, where("name", "==", currentCharacter.value?.name))
 
-    if (inputElement.files && inputElement.files[0]) {
-      const selectedFile = inputElement.files[0];
+  const result = await getDocs(q)
 
-      const fileRef = storageRef(storage, `/images/${selectedFile.name}`);
-      await uploadBytes(fileRef, selectedFile);
-
-      const pathReference = storageRef(storage, `images/${selectedFile.name}`);
-      previewImage.value = await getDownloadURL(pathReference);
-    }
-  }
+  return result.docs[0].id
 }
 
-async function uploadData(){
-  await addDoc(collection(db, "characters"), {
+async function updateData(): Promise<void> {
+
+  const id = await getId()
+
+  await updateDoc(doc(db, "characters", id), {
     name: characterName.value,
-    img: previewImage.value,
+    img: currentCharacter.value?.img ? currentCharacter.value?.img : previewImage.value,
     role: selectedRole.value.toLowerCase(),
     dps: [selectedDps1.value.name, selectedDps2.value.name, selectedDps3.value.name],
     tanks: [selectedTank1.value.name, selectedTank2.value.name, selectedTank3.value.name],
     supports: [selectedSupport1.value.name, selectedSupport2.value.name, selectedSupport3.value.name],
   })
+
+  navigateTo("/admin")
 }
 
-const roles = ["Tank", "DPS", "Support"]
+const roles = ["Tank", "dps", "Support"]
 const selectedRole = ref<string>(roles[0])
 
 onMounted(async () => {
+  await getCurrentCharacter()
   await getCharacters()
   tanks.value = characters.value.filter((character) => character.role === "tank")
-  selectedTank1.value = tanks.value[0]
-  selectedTank2.value = tanks.value[1]
-  selectedTank3.value = tanks.value[2]
+  selectedTank1.value = {
+    name: currentCharacter.value?.tanks[0]
+  }
+  selectedTank2.value = {
+    name: currentCharacter.value?.tanks[1]
+  }
+  selectedTank3.value = {
+    name: currentCharacter.value?.tanks[2]
+  }
   dps.value = characters.value.filter((character) => character.role === "dps")
-  selectedDps1.value = dps.value[0]
-  selectedDps2.value = dps.value[1]
-  selectedDps3.value = dps.value[2]
+  selectedDps1.value = {
+    name: currentCharacter.value?.dps[0]
+  }
+  selectedDps2.value = {
+    name: currentCharacter.value?.dps[1]
+  }
+  selectedDps3.value = {
+    name: currentCharacter.value?.dps[2]
+  }
   supports.value = characters.value.filter((character) => character.role === "support")
-  selectedSupport1.value = supports.value[0]
-  selectedSupport2.value = supports.value[1]
-  selectedSupport3.value = supports.value[2]
+  selectedSupport1.value = {
+    name: currentCharacter.value?.supports[0]
+  }
+  selectedSupport2.value = {
+    name: currentCharacter.value?.supports[1]
+  }
+  selectedSupport3.value = {
+    name: currentCharacter.value?.supports[2]
+  }
+
+  characterName.value = currentCharacter.value!.name
+  selectedRole.value = currentCharacter.value!.role
 })
 
 const updateQuery = (value: string): void => {
-  query.value = value;
+  searchQuery.value = value;
 };
 </script>
 
@@ -131,8 +148,8 @@ const updateQuery = (value: string): void => {
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
                class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
-          <img class="rounded-lg" :src="previewImage ? previewImage : '/placeholder.png'" alt="image">
-          <input @change="handleUpload" id="dropzone-file" type="file" class="hidden"/>
+          <img class="rounded-lg" :src="currentCharacter?.img ? currentCharacter.img : '/placeholder.png'" alt="image">
+          <input id="dropzone-file" type="file" class="hidden"/>
         </label>
         <input v-model="characterName" class="py-2 px-4 rounded-lg w-full" type="text" placeholder="Name">
         <Listbox v-model="selectedRole">
@@ -196,17 +213,20 @@ const updateQuery = (value: string): void => {
         <CharacterSelect
             v-model="selectedTank1"
             :filtered-array="filteredTanks"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedTank1"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedTank2"
             :filtered-array="filteredTanks"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedTank2"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedTank3"
             :filtered-array="filteredTanks"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedTank3"
             @updateQuery="updateQuery"/>
       </div>
       <h1 class="text-2xl font-bold mb-4">Dps</h1>
@@ -214,17 +234,20 @@ const updateQuery = (value: string): void => {
         <CharacterSelect
             v-model="selectedDps1"
             :filtered-array="filteredDps"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedDps1"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedDps2"
             :filtered-array="filteredDps"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedDps2"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedDps3"
             :filtered-array="filteredDps"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedDps3"
             @updateQuery="updateQuery"/>
       </div>
       <h1 class="text-2xl font-bold mb-4">Supports</h1>
@@ -232,22 +255,27 @@ const updateQuery = (value: string): void => {
         <CharacterSelect
             v-model="selectedSupport1"
             :filtered-array="filteredSupports"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedSupport1"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedSupport2"
             :filtered-array="filteredSupports"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedSupport2"
             @updateQuery="updateQuery"/>
         <CharacterSelect
             v-model="selectedSupport3"
             :filtered-array="filteredSupports"
-            :query="query"
+            :searchQuery="searchQuery"
+            :selected="selectedSupport3"
             @updateQuery="updateQuery"/>
       </div>
     </div>
   </section>
   <div class="w-1/2 mx-auto">
-  <button @click="uploadData" class="w-full py-2 px-4 rounded-lg bg-teal-600 text-white mt-10 text-center font-bold">Add</button>
+    <button @click="updateData" class="w-full py-2 px-4 rounded-lg bg-teal-600 text-white mt-10 text-center font-bold">
+      Update
+    </button>
   </div>
 </template>
