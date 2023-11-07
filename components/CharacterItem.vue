@@ -17,7 +17,7 @@ defineProps({
     <img :src="character.img" :alt="character.name">
     <div class="flex items-center gap-2">
     <p class="font-bold italic text-xl text-center py-2">{{ character.name }}</p>
-      <img class="w-6" :src="`../${character.role}_icon.svg`" :alt="character.name">
+      <img class="w-6" :src="`${character.role}_icon.svg`" :alt="character.name">
     </div>
   </article>
 </template>

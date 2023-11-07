@@ -20,6 +20,9 @@ onMounted(async () => {
     loadImagesURL(currentCharacter.value!.supports, supportsUrl)]);
 })
 
+const currentCharacterClassIcon = computed(():string => {
+  return currentCharacter.value?.img ? `../${currentCharacter.value.role}_icon.svg` : ''
+})
 </script>
 
 <template>
@@ -30,7 +33,7 @@ onMounted(async () => {
         <div class="flex items-center gap-2 py-2">
           <h1
               class="font-bold text-xl italic">{{ currentCharacter.name }}</h1>
-          <img :src="`../${currentCharacter.role}_icon.svg`" :alt="currentCharacter.name">
+          <img :src="currentCharacterClassIcon" :alt="currentCharacter.name">
         </div>
       </div>
     </div>
