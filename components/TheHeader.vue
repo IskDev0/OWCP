@@ -11,7 +11,7 @@ async function signOut() {
 </script>
 
 <template>
-  <header class="bg-white">
+  <header class="bg-white px-4">
     <div class="container mx-auto flex items-center justify-between py-4">
       <NuxtLink to="/"><img class="w-16" src="/logo.png" alt="logo"></NuxtLink>
       <div class="flex items-center gap-8">
