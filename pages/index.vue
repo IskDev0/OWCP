@@ -3,7 +3,7 @@ import {useCharacterStore} from "~/stores/characters";
 import getCharacters from "~/utils/getCharacters";
 
 const characterStore = useCharacterStore()
-const {characters} = storeToRefs(characterStore)
+const {filteredCharacters} = storeToRefs(characterStore)
 
 onMounted(() => {
   getCharacters()
@@ -11,5 +11,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <CharactersList :characters="characters"/>
+  <CharactersList :characters="filteredCharacters"/>
+  <NotFound v-if="filteredCharacters.length === 0"/>
 </template>

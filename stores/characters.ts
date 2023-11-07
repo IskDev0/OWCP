@@ -5,6 +5,8 @@ export const useCharacterStore = defineStore("characters", () => {
 
     const characters = ref<CharacterType[]>([])
 
+    const filteredCharacters = ref<CharacterType[]>([])
+
     const searchQuery = ref<string>("")
 
     const currentCharacter = ref<CharacterType>()
@@ -21,7 +23,7 @@ export const useCharacterStore = defineStore("characters", () => {
     }
 
     return {
-        characters, searchQuery, currentCharacter, clearStore
+        characters, filteredCharacters, searchQuery, currentCharacter, clearStore
     }
 
 })

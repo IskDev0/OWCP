@@ -6,7 +6,7 @@ async function getCharacters(): Promise<void> {
     const db = getFirestore()
     const characterStore = useCharacterStore()
 
-    const {characters} = storeToRefs(characterStore)
+    const {characters, filteredCharacters} = storeToRefs(characterStore)
 
     const data = await getDocs(collection(db, "characters"))
 
@@ -17,6 +17,7 @@ async function getCharacters(): Promise<void> {
     })
 
     characters.value = tempArr
+    filteredCharacters.value = characters.value
 }
 
 export default getCharacters
