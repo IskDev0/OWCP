@@ -14,6 +14,6 @@ defineProps({
 
 <template>
   <div class="grid grid-cols-6 gap-4 mt-10">
-    <CharacterItem :path="`admin/edit/${character.name}`" v-for="(character,index) in characters" :key="index" :character="character"/>
+    <CharacterItem :path="`/admin/edit/${character.name}`" v-for="(character,index) in characters" :key="index" :character="character"/>
   </div>
 </template>
