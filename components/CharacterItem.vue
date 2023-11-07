@@ -13,7 +13,7 @@ defineProps({
 </script>
 
 <template>
-  <article @click="navigateTo(path)" class="flex flex-col items-center bg-white rounded-lg" v-if="character">
+  <article @click="navigateTo(path)" class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white" v-if="character">
     <img :src="character.img" :alt="character.name">
     <div class="flex items-center gap-2">
     <p class="font-bold italic text-xl text-center py-2">{{ character.name }}</p>

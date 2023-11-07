@@ -26,9 +26,8 @@ const currentCharacterClassIcon = computed(():string => {
 </script>
 
 <template>
-  <section class="flex flex-col items-center sm:items-start lg:flex-row gap-10 mt-10" v-if="currentCharacter">
-    <div class="md:w-1/3">
-      <div class="flex flex-col items-center bg-white rounded-lg">
+  <section class="flex flex-col items-center justify-between sm:items-start lg:flex-row gap-10 pt-10" v-if="currentCharacter">
+      <div class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
         <img class="max-w-64" :src="currentCharacter.img" :alt="currentCharacter.name">
         <div class="flex items-center gap-2 py-2">
           <h1
@@ -36,11 +35,9 @@ const currentCharacterClassIcon = computed(():string => {
           <img :src="currentCharacterClassIcon" :alt="currentCharacter.name">
         </div>
       </div>
-    </div>
-    <div class="lg:w-2/3">
       <div class="flex flex-col items-center sm:grid sm:grid-cols-3 gap-8" v-if="supportsUrl">
         <div @click="navigateTo(tank)" v-for="(tank,index) in currentCharacter.tanks" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg">
+             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
           <img class="max-w-64" :src="tanksUrl[index]" :alt="tank">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ tank }}</h2>
@@ -48,7 +45,7 @@ const currentCharacterClassIcon = computed(():string => {
           </div>
         </div>
         <div @click="navigateTo(dps)" v-for="(dps,index) in currentCharacter.dps" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg">
+             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
           <img class="max-w-64" :src="dpsUrl[index]" :alt="dps">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ dps }}</h2>
@@ -56,7 +53,7 @@ const currentCharacterClassIcon = computed(():string => {
           </div>
         </div>
         <div @click="navigateTo(support)" v-for="(support,index) in currentCharacter.supports" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg">
+             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
           <img class="max-w-64" :src="supportsUrl[index]" :alt="support">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ support }}</h2>
@@ -64,6 +61,5 @@ const currentCharacterClassIcon = computed(():string => {
           </div>
         </div>
       </div>
-    </div>
   </section>
 </template>

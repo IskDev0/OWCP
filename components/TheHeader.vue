@@ -24,25 +24,36 @@ async function signOut(): Promise<void> {
   await auth.signOut();
   navigateTo("/")
 }
+
+function toggleDarkMode(): void {
+  const html = document.querySelector("html");
+  html?.classList.toggle("dark");
+}
+
+const isDark = computed(() => {
+  const html = document.querySelector("html");
+  return html?.classList.contains("dark")
+})
+
 </script>
 
 <template>
-  <header class="bg-white px-4">
+  <header class="bg-white px-4 dark:bg-zinc-900">
     <div class="container mx-auto flex items-center justify-between py-4">
       <NuxtLink to="/"><img class="w-16" src="/logo.png" alt="logo"></NuxtLink>
       <form>
         <input
             @input="searchCharacter"
             v-model="searchQuery"
-            class="py-2 px-4 border-2 border-black rounded-lg"
+            class="py-2 px-4 border-2 border-zinc-500 rounded-lg outline-none dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
             type="search"
             placeholder="Search">
       </form>
       <div class="flex items-center gap-8">
-        <button class="border-2 border-black p-2 rounded-lg"><img src="/theme.svg" alt="theme"></button>
+        <button @click="toggleDarkMode" class="flex items-center justify-center rounded-lg h-8 w-8"><Icon class="dark:text-white" size="32" name="mdi:white-balance-sunny"/></button>
         <ClientOnly>
           <button @click="signOut" v-if="user">
-            <Icon size="28" name="mdi:logout"/>
+            <Icon class="dark:text-white" size="28" name="mdi:logout"/>
           </button>
         </ClientOnly>
       </div>

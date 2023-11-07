@@ -143,7 +143,7 @@ const updateQuery = (value: string): void => {
 </script>
 
 <template>
-  <section class="mt-10 flex">
+  <section class="pt-10 flex">
     <div class="w-1/3">
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
@@ -151,11 +151,11 @@ const updateQuery = (value: string): void => {
           <img class="rounded-lg" :src="currentCharacter?.img ? currentCharacter.img : '/placeholder.png'" alt="image">
           <input id="dropzone-file" type="file" class="hidden"/>
         </label>
-        <input v-model="characterName" class="py-2 px-4 rounded-lg w-full" type="text" placeholder="Name">
+        <input v-model="characterName" class="py-2 px-4 rounded-lg w-full dark:bg-zinc-700 dark:text-white dark:focus:outline-zinc-500" type="text" placeholder="Name">
         <Listbox v-model="selectedRole">
           <div class="relative mt-1 w-full">
             <ListboxButton
-                class="relative w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                class="relative w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-700 dark:text-white"
             >
               <span class="block truncate">{{ selectedRole }}</span>
               <span
@@ -171,7 +171,7 @@ const updateQuery = (value: string): void => {
                 leave-to-class="opacity-0"
             >
               <ListboxOptions
-                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+                  class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm dark:bg-zinc-700"
               >
                 <ListboxOption
                     v-slot="{ active, selected }"
@@ -181,8 +181,9 @@ const updateQuery = (value: string): void => {
                     as="template"
                 >
                   <li
+                      class="dark:bg-zinc-700 dark:text-white"
                       :class="[
-                  active ? 'bg-teal-600 text-white' : 'text-gray-900',
+                  active ? 'dark:bg-teal-600 dark:text-white' : 'text-gray-900',
                   'relative cursor-pointer select-none py-2 pl-10 pr-4',
                 ]"
                   >
@@ -207,7 +208,7 @@ const updateQuery = (value: string): void => {
         </Listbox>
       </form>
     </div>
-    <div class="w-2/3 bg-white p-4 rounded-lg">
+    <div class="w-2/3 bg-white p-4 rounded-lg dark:bg-zinc-700">
       <h1 class="text-2xl font-bold mb-4">Tanks</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
