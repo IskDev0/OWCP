@@ -27,23 +27,38 @@ onMounted(async () => {
     <div class="md:w-1/3">
       <div class="flex flex-col items-center bg-white rounded-lg">
         <img class="max-w-64" :src="currentCharacter.img" :alt="currentCharacter.name">
-        <h1 class="font-bold text-xl italic">{{ currentCharacter.name }}</h1>
+        <div class="flex items-center gap-2 py-2">
+          <h1
+              class="font-bold text-xl italic">{{ currentCharacter.name }}</h1>
+          <img :src="`../${currentCharacter.role}_icon.svg`" :alt="currentCharacter.name">
+        </div>
       </div>
     </div>
     <div class="lg:w-2/3">
       <div class="flex flex-col items-center sm:grid sm:grid-cols-3 gap-8" v-if="supportsUrl">
-        <div @click="navigateTo(tank)" v-for="(tank,index) in currentCharacter.tanks" :key="index" class="flex flex-col items-center bg-white rounded-lg">
+        <div @click="navigateTo(tank)" v-for="(tank,index) in currentCharacter.tanks" :key="index"
+             class="flex flex-col items-center bg-white rounded-lg">
           <img class="max-w-64" :src="tanksUrl[index]" :alt="tank">
-          <h2 class="text-xl font-bold italic">{{ tank }}</h2>
+          <div class="flex items-center gap-2 py-2">
+            <h2 class="text-xl font-bold italic">{{ tank }}</h2>
+            <img src="/tank_icon.svg" alt="tank">
+          </div>
         </div>
-        <div @click="navigateTo(dps)" v-for="(dps,index) in currentCharacter.dps" :key="index" class="flex flex-col items-center bg-white rounded-lg">
+        <div @click="navigateTo(dps)" v-for="(dps,index) in currentCharacter.dps" :key="index"
+             class="flex flex-col items-center bg-white rounded-lg">
           <img class="max-w-64" :src="dpsUrl[index]" :alt="dps">
-          <h2 class="text-xl font-bold italic">{{ dps }}</h2>
+          <div class="flex items-center gap-2 py-2">
+            <h2 class="text-xl font-bold italic">{{ dps }}</h2>
+            <img src="/dps_icon.svg" alt="dps">
+          </div>
         </div>
         <div @click="navigateTo(support)" v-for="(support,index) in currentCharacter.supports" :key="index"
              class="flex flex-col items-center bg-white rounded-lg">
           <img class="max-w-64" :src="supportsUrl[index]" :alt="support">
-          <h2 class="text-xl font-bold italic">{{ support }}</h2>
+          <div class="flex items-center gap-2 py-2">
+            <h2 class="text-xl font-bold italic">{{ support }}</h2>
+            <img src="/support_icon.svg" alt="support">
+          </div>
         </div>
       </div>
     </div>
