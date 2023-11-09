@@ -10,7 +10,10 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 pt-10 sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-    <CharacterItem :path="`character/${character.name}`" v-for="(character,index) in characters" :key="index" :character="character"/>
+  <div class="h-full">
+    <div class="flex flex-col gap-4 pt-10 sm:grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      <CharacterItem :path="`character/${character.name}`" v-for="(character,index) in characters" :key="index"
+                     :character="character"/>
+    </div>
   </div>
 </template>

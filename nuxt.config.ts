@@ -35,5 +35,12 @@ export default defineNuxtConfig({
             NUXT_APP_ID: process.env.NUXT_APP_ID,
             GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
         }
+    },
+    app: {
+        head: {
+            bodyAttrs: {
+                class: 'bg-[#eee] dark:bg-zinc-800'
+            }
+        }
     }
 })

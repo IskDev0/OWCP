@@ -143,7 +143,8 @@ const updateQuery = (value: string): void => {
 </script>
 
 <template>
-  <section class="pt-10 flex">
+  <section class="pt-10 h-screen">
+    <div class="flex">
     <div class="w-1/3">
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
@@ -273,10 +274,11 @@ const updateQuery = (value: string): void => {
             @updateQuery="updateQuery"/>
       </div>
     </div>
+    </div>
+    <div class="w-1/2 mx-auto">
+      <button @click="updateData" class="w-full py-2 px-4 rounded-lg bg-teal-600 text-white mt-10 text-center font-bold">
+        Update
+      </button>
+    </div>
   </section>
-  <div class="w-1/2 mx-auto">
-    <button @click="updateData" class="w-full py-2 px-4 rounded-lg bg-teal-600 text-white mt-10 text-center font-bold">
-      Update
-    </button>
-  </div>
 </template>

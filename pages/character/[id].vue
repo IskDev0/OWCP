@@ -37,24 +37,24 @@ const currentCharacterClassIcon = computed(():string => {
       </div>
       <div class="flex flex-col items-center sm:grid sm:grid-cols-3 gap-8" v-if="supportsUrl">
         <div @click="navigateTo(tank)" v-for="(tank,index) in currentCharacter.tanks" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
-          <img class="max-w-64" :src="tanksUrl[index]" :alt="tank">
+             class="flex flex-col items-center bg-white rounded-lg cursor-pointer dark:bg-zinc-700 dark:text-white">
+          <img class="max-w-64 rounded-t-lg" :src="tanksUrl[index]" :alt="tank">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ tank }}</h2>
             <img src="/tank_icon.svg" alt="tank">
           </div>
         </div>
         <div @click="navigateTo(dps)" v-for="(dps,index) in currentCharacter.dps" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
-          <img class="max-w-64" :src="dpsUrl[index]" :alt="dps">
+             class="flex flex-col items-center bg-white rounded-lg cursor-pointer dark:bg-zinc-700 dark:text-white">
+          <img class="max-w-64 rounded-t-lg" :src="dpsUrl[index]" :alt="dps">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ dps }}</h2>
             <img src="/dps_icon.svg" alt="dps">
           </div>
         </div>
         <div @click="navigateTo(support)" v-for="(support,index) in currentCharacter.supports" :key="index"
-             class="flex flex-col items-center bg-white rounded-lg dark:bg-zinc-700 dark:text-white">
-          <img class="max-w-64" :src="supportsUrl[index]" :alt="support">
+             class="flex flex-col items-center bg-white rounded-lg cursor-pointer dark:bg-zinc-700 dark:text-white">
+          <img class="max-w-64 rounded-t-lg" :src="supportsUrl[index]" :alt="support">
           <div class="flex items-center gap-2 py-2">
             <h2 class="text-xl font-bold italic">{{ support }}</h2>
             <img src="/support_icon.svg" alt="support">

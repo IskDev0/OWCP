@@ -30,26 +30,29 @@ function toggleDarkMode(): void {
   html?.classList.toggle("dark");
 }
 
-const isDark = computed(() => {
-  const html = document.querySelector("html");
-  return html?.classList.contains("dark")
+onMounted(() => {
+  if (localStorage.theme === 'dark') {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
 })
 
 </script>
 
 <template>
-  <header class="bg-white px-4 dark:bg-zinc-900">
+  <header class="bg-white px-4 dark:bg-zinc-900 fixed top-0 left-0 right-0">
     <div class="container mx-auto flex items-center justify-between py-4">
-      <NuxtLink to="/"><img class="w-16" src="/logo.png" alt="logo"></NuxtLink>
+      <NuxtLink to="/"><img class="w-16 h-12" src="/logo.png" alt="logo"></NuxtLink>
       <form>
         <input
             @input="searchCharacter"
             v-model="searchQuery"
-            class="py-2 px-4 border-2 border-zinc-500 rounded-lg outline-none dark:bg-zinc-700 dark:text-white dark:border-zinc-600"
+            class="py-2 px-4 border-2 border-zinc-500 rounded-lg outline-none dark:bg-zinc-700 dark:text-white dark:border-zinc-600 max-w-xs w-40 sm:w-60 md:w-96"
             type="search"
             placeholder="Search">
       </form>
-      <div class="flex items-center gap-8">
+      <div class="flex items-center gap-2 sm:gap-8">
         <button @click="toggleDarkMode" class="flex items-center justify-center rounded-lg h-8 w-8"><Icon class="dark:text-white" size="32" name="mdi:white-balance-sunny"/></button>
         <ClientOnly>
           <button @click="signOut" v-if="user">

@@ -46,7 +46,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="h-[calc(100vh-78px)] flex items-center justify-center">
+  <section class="flex items-center justify-center">
       <button class="flex items-center gap-4 py-2 px-4 rounded-lg bg-white uppercase font-semibold dark:bg-zinc-700 dark:text-white" @click="signInWithGoogle"><Icon size="20" name="logos:google-icon"/><span>Sign In</span></button>
   </section>
 </template>
