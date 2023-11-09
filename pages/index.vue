@@ -7,6 +7,7 @@ const {filteredCharacters} = storeToRefs(characterStore)
 
 onMounted(() => {
   getCharacters()
+  localStorage.setItem("theme", "dark")
 })
 </script>
 
