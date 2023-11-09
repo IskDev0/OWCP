@@ -147,7 +147,7 @@ const updateQuery = (value: string): void => {
     <div class="w-1/3">
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
-               class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
+               class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-zinc-700 dark:border-none">
           <img class="rounded-lg" :src="currentCharacter?.img ? currentCharacter.img : '/placeholder.png'" alt="image">
           <input id="dropzone-file" type="file" class="hidden"/>
         </label>
@@ -209,7 +209,7 @@ const updateQuery = (value: string): void => {
       </form>
     </div>
     <div class="w-2/3 bg-white p-4 rounded-lg dark:bg-zinc-700">
-      <h1 class="text-2xl font-bold mb-4">Tanks</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Tanks</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedTank1"
@@ -230,7 +230,7 @@ const updateQuery = (value: string): void => {
             :selected="selectedTank3"
             @updateQuery="updateQuery"/>
       </div>
-      <h1 class="text-2xl font-bold mb-4">Dps</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Dps</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedDps1"
@@ -251,7 +251,7 @@ const updateQuery = (value: string): void => {
             :selected="selectedDps3"
             @updateQuery="updateQuery"/>
       </div>
-      <h1 class="text-2xl font-bold mb-4">Supports</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Supports</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedSupport1"

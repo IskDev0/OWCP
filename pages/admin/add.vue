@@ -17,7 +17,7 @@ const db = useFirestore()
 
 const {characters} = storeToRefs(characterStore)
 
-const query = ref<string>("")
+const searchQuery = ref<string>("")
 
 const characterName = ref<string>()
 
@@ -39,35 +39,35 @@ const selectedSupport3 = ref()
 
 
 const filteredTanks = computed(() =>
-    query.value === ''
+    searchQuery.value === ''
         ? tanks.value
         : tanks.value.filter((character: CharacterType) =>
             character.name
                 .toLowerCase()
                 .replace(/\s+/g, '')
-                .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+                .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
         )
 )
 
 const filteredDps = computed(() =>
-    query.value === ''
+    searchQuery.value === ''
         ? dps.value
         : dps.value.filter((character: CharacterType) =>
             character.name
                 .toLowerCase()
                 .replace(/\s+/g, '')
-                .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+                .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
         )
 )
 
 const filteredSupports = computed(() => {
-  return query.value === ''
+  return searchQuery.value === ''
       ? supports.value
       : supports.value.filter((character: CharacterType) =>
           character.name
               .toLowerCase()
               .replace(/\s+/g, '')
-              .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+              .includes(searchQuery.value.toLowerCase().replace(/\s+/g, ''))
       )
 })
 
@@ -81,16 +81,16 @@ async function handleUpload(event: Event): Promise<void> {
     if (inputElement.files && inputElement.files[0]) {
       const selectedFile = inputElement.files[0];
 
-      const fileRef = storageRef(storage, `/images/${selectedFile.name}`);
+      const fileRef = storageRef(storage, `/images/${characterName.value}`);
       await uploadBytes(fileRef, selectedFile);
 
-      const pathReference = storageRef(storage, `images/${selectedFile.name}`);
+      const pathReference = storageRef(storage, `images/${characterName.value}`);
       previewImage.value = await getDownloadURL(pathReference);
     }
   }
 }
 
-async function uploadData(){
+async function uploadData() : Promise<void>{
   await addDoc(collection(db, "characters"), {
     name: characterName.value,
     img: previewImage.value,
@@ -99,6 +99,7 @@ async function uploadData(){
     tanks: [selectedTank1.value.name, selectedTank2.value.name, selectedTank3.value.name],
     supports: [selectedSupport1.value.name, selectedSupport2.value.name, selectedSupport3.value.name],
   })
+  await navigateTo("/admin")
 }
 
 const roles = ["Tank", "DPS", "Support"]
@@ -120,8 +121,8 @@ onMounted(async () => {
   selectedSupport3.value = supports.value[2]
 })
 
-const updateQuery = (value: string): void => {
-  query.value = value;
+const updateSearchQuery = (value: string): void => {
+  searchQuery.value = value;
 };
 </script>
 
@@ -130,7 +131,7 @@ const updateQuery = (value: string): void => {
     <div class="w-1/3">
       <form class="flex flex-col gap-4 items-center w-1/2 mx-auto">
         <label for="dropzone-file"
-               class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
+               class="flex flex-col items-center justify-center w-64 h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-zinc-600 dark:border-none">
           <img class="rounded-lg" :src="previewImage ? previewImage : '/placeholder.png'" alt="image">
           <input @change="handleUpload" id="dropzone-file" type="file" class="hidden"/>
         </label>
@@ -191,60 +192,69 @@ const updateQuery = (value: string): void => {
         </Listbox>
       </form>
     </div>
-    <div class="w-2/3 bg-white p-4 rounded-lg dark:bg-zinc-700 dark:text-white">
-      <h1 class="text-2xl font-bold mb-4">Tanks</h1>
+    <div class="w-2/3 bg-white p-4 rounded-lg dark:bg-zinc-700">
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Tanks</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedTank1"
             :filtered-array="filteredTanks"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedTank1"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedTank2"
             :filtered-array="filteredTanks"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedTank2"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedTank3"
             :filtered-array="filteredTanks"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedTank3"
+            @updateSearchQuery="updateSearchQuery"/>
       </div>
-      <h1 class="text-2xl font-bold mb-4">Dps</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Dps</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedDps1"
             :filtered-array="filteredDps"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedDps1"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedDps2"
             :filtered-array="filteredDps"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedDps2"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedDps3"
             :filtered-array="filteredDps"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedDps3"
+            @updateSearchQuery="updateSearchQuery"/>
       </div>
-      <h1 class="text-2xl font-bold mb-4">Supports</h1>
+      <h1 class="text-2xl font-bold mb-4 dark:text-white">Supports</h1>
       <div class="grid grid-cols-3 gap-8 mb-4">
         <CharacterSelect
             v-model="selectedSupport1"
             :filtered-array="filteredSupports"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedSupport1"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedSupport2"
             :filtered-array="filteredSupports"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedSupport2"
+            @updateSearchQuery="updateSearchQuery"/>
         <CharacterSelect
             v-model="selectedSupport3"
             :filtered-array="filteredSupports"
-            :query="query"
-            @updateQuery="updateQuery"/>
+            :searchsearchQuery="searchQuery"
+            :selected="selectedSupport3"
+            @updateSearchQuery="updateSearchQuery"/>
       </div>
     </div>
   </section>

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {
-  Combobox,
-  ComboboxButton,
-  ComboboxInput,
-  ComboboxOption,
-  ComboboxOptions,
-  TransitionRoot
-} from "@headlessui/vue";
+  Listbox,
+  ListboxLabel,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from '@headlessui/vue'
 
 defineProps({
   modelValue: {
@@ -26,70 +25,57 @@ const emit = defineEmits(['update:modelValue', 'updateQuery'])
 </script>
 
 <template>
-  <Combobox :value="modelValue" @update:modelValue="value => emit('update:modelValue', value)">
+  <Listbox :modelValue="selected" @update:modelValue="emit('update:modelValue', $event)">
     <div class="relative mt-1">
-      <div
-          class="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm"
+      <ListboxButton
+          class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-600 dark:text-white"
       >
-        <ComboboxInput
-            class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-            :displayValue="character => character.name"
-            @change="emit('updateQuery', $event.target.value)"
-            :value="selected?.name"
-        />
-        <ComboboxButton
-            class="absolute inset-y-0 right-0 flex items-center pr-2"
+        <span class="block truncate">{{ selected?.name }}</span>
+        <span
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
         >
-          <Icon name="mdi:unfold-more-horizontal"/>
-        </ComboboxButton>
-      </div>
-      <TransitionRoot
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          @after-leave="emit('updateQuery', '')"
-      >
-        <ComboboxOptions
-            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
-        >
-          <div
-              v-if="filteredArray!.length === 0 && searchQuery !== ''"
-              class="relative cursor-default select-none py-2 px-4 text-gray-700"
-          >
-            Nothing found.
-          </div>
+            <Icon name="mdi:unfold-more-horizontal"/>
+          </span>
+      </ListboxButton>
 
-          <ComboboxOption
-              v-for="character in filteredArray"
+      <transition
+          leave-active-class="transition duration-100 ease-in"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+      >
+        <ListboxOptions
+            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm dark:bg-zinc-600"
+        >
+          <ListboxOption
+              v-slot="{ active, selected }"
+              v-for="person in filteredArray"
+              :key="person.name"
+              :value="person"
               as="template"
-              :key="character.id"
-              :value="character"
-              v-slot="{ selected, active }"
           >
             <li
-                class="relative cursor-pointer select-none py-2 pl-10 pr-4"
-                :class="{
-                  'bg-teal-600 text-white': active,
-                  'text-gray-900': !active,
-                }"
+                :class="[
+                  active ? 'bg-zinc-400 text-white' : 'text-gray-900',
+                  'relative cursor-default select-none py-2 pl-10 pr-4 dark:text-white',
+                ]"
             >
                 <span
-                    class="block truncate"
-                    :class="{ 'font-medium': selected, 'font-normal': !selected }"
+                    :class="[
+                    selected ? 'font-medium' : 'font-normal',
+                    'block truncate',
+                  ]"
+                >{{ person.name }}</span
                 >
-                  {{ character.name ? character.name : character }}
-                </span>
               <span
                   v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-3"
-                  :class="{ 'text-white': active, 'text-teal-600': !active }"
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 dark:text-white"
               >
-                  <Icon name="mdi:check"/>
+                 <Icon name="mdi:check"/>
                 </span>
             </li>
-          </ComboboxOption>
-        </ComboboxOptions>
-      </TransitionRoot>
+          </ListboxOption>
+        </ListboxOptions>
+      </transition>
     </div>
-  </Combobox>
+  </Listbox>
 </template>
