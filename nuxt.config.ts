@@ -40,7 +40,14 @@ export default defineNuxtConfig({
         head: {
             bodyAttrs: {
                 class: 'bg-[#eee] dark:bg-zinc-800'
-            }
+            },
+            link: [
+                {
+                    rel: 'icon',
+                    type: 'image/png',
+                    href: '/favicon.svg'
+                }
+            ]
         }
     }
 })
